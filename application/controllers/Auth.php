@@ -9,14 +9,16 @@ class Auth extends RestController {
         parent::__construct();
         $this->load->model('Auth_model');
     }
-// REST_Controller::HTTP_OK = 200
-// REST_Controller::HTTP_NOT_FOUND = 404
-// REST_Controller::HTTP_BAD_REQUEST = 400
-    public function user_get(){
+
+    // REST_Controller::HTTP_OK = 200
+    // REST_Controller::HTTP_NOT_FOUND = 404
+    // REST_Controller::HTTP_BAD_REQUEST = 400
+
+    public function login_get(){ // for login check
         $email = $this->get('email');
         $password = $this->get('password');
 
-        $user = $this->Auth_model->getUser($email)->row_array();
+        $user = $this->Auth_model->getLogin($email)->row_array();
         if ($user == null){
             $this->response( [
                 'status' => false,
