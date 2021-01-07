@@ -22,14 +22,14 @@ class Auth extends RestController {
         if ($user == null){
             $this->response( [
                 'status' => false,
-                'message' => 'Account not found'
+                'message' => 'account not found'
             ], 404);
         }
         else {
             if ($user['status'] == 0){
                 $this->response( [
                     'status' => false,
-                    'message' => 'Account is not activated'
+                    'message' => 'account is not activated'
                 ], 400);
             }
             else {
@@ -46,7 +46,7 @@ class Auth extends RestController {
                 else {
                     $this->response( [
                         'status' => false,
-                        'message' => 'Wrong password'
+                        'message' => 'wrong password'
                     ], 400);
                 }
             }
