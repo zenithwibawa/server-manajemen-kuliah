@@ -71,12 +71,11 @@ class Admin extends RestController {
         $jk = $this->post('jenis_kelamin');
         $tgl = $this->post('tgl_lahir');
         $id_department = $this->post('id_department');
-        $img = $this->post('img');
 
-        if ($email == null || $password == null || $nama == null || $jk == null || $tgl == null || $id_department == null || $img == null){
+        if ($email == null || $password == null || $nama == null || $jk == null || $tgl == null || $id_department == null){
             $this->response( [
                 'status' => false,
-                'message' => 'nama, email, jenis_kelamin, tgl_lahir, id_department, password, img are required'
+                'message' => 'nama, email, jenis_kelamin, tgl_lahir, id_department, password are required'
             ], 400);
         }
         else {
@@ -95,7 +94,7 @@ class Admin extends RestController {
                 'tgl_lahir' => $tgl,
                 'id_departemen' => $id_department,
                 'id_user' => $id['id_user'],
-                'img' => $img
+                'img' => 'http://localhost/server-manajemen-kuliah/assets/img/user.png'
             ];
             $insert = $this->Admin_model->addOperatorData($dataoperator);
             if ($insert){
@@ -123,12 +122,11 @@ class Admin extends RestController {
         $jk = $this->put('jenis_kelamin');
         $tgl = $this->put('tgl_lahir');
         $id_department = $this->put('id_department');
-        $img = $this->put('img');
 
-        if ($id_user == null || $id_operator == null || $email == null || $password == null || $nama == null || $jk == null || $tgl == null || $id_department == null || $img == null){
+        if ($id_user == null || $id_operator == null || $email == null || $password == null || $nama == null || $jk == null || $tgl == null || $id_department == null){
             $this->response( [
                 'status' => false,
-                'message' => 'id_user, id_operator, nama, email, jenis_kelamin, tgl_lahir, id_department, password, img are required'
+                'message' => 'id_user, id_operator, nama, email, jenis_kelamin, tgl_lahir, id_department, password are required'
             ], 400);
         }
         else {
@@ -141,8 +139,7 @@ class Admin extends RestController {
                 'nama' => $nama,
                 'jenis_kelamin' => $jk,
                 'tgl_lahir' => $tgl,
-                'id_departemen' => $id_department,
-                'img' => $img
+                'id_departemen' => $id_department
             ];
             $insert = $this->Admin_model->updateOperatorData($id_operator, $dataoperator);
             if ($insert){
@@ -185,6 +182,30 @@ class Admin extends RestController {
                     'message' => 'data failed to deleted'
                 ], 400);
             }
+        }
+    }
+
+    public function department_get(){
+        $id_department = $this->get('id_department');
+
+        if ($id_department == null){
+            $departmentdata = $this->Admin_model->getDepartmentData()->result_array();
+        }
+        else {
+            $departmentdata = $this->Admin_model->getDepartmentData($id_department)->row_array();
+        }
+        
+        if ($departmentdata == null){
+            $this->response( [
+                'status' => false,
+                'message' => 'department not found'
+            ], 404);
+        }
+        else {
+            $this->response( [
+                'status' => true,
+                'data' => $departmentdata
+            ], 200);
         }
     }
 

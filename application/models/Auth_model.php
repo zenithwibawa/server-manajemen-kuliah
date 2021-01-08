@@ -6,4 +6,8 @@ class Auth_model extends CI_Model {
         return $this->db->get_where('user', ['email' => $email]);
     }
 
+    public function checkEmailIsUnique($email){
+        return $this->db->get_where('user', ['email' => $email]);
+    }
+
 }

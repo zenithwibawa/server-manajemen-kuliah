@@ -6,9 +6,20 @@ class Admin_model extends CI_Model {
         return $this->db->get_where('user', ['email' => $email, 'role' => 'Admin']);
     }
 
-    public function getOperatorData($id = null){
-        if ($id == null) return $this->db->get('operator');
-        else return $this->db->get_where('operator', ['id_operator' => $id]);
+    public function getOperatorData($id=null){
+        if ($id == null) {
+            $this->db->from('user a, operator b, departemen c');
+            $this->db->where('a.id_user = b.id_user');
+            $this->db->where('b.id_departemen = c.id_departemen');
+            return $this->db->get();
+        }
+        else {
+            $this->db->from('user a, operator b, departemen c');
+            $this->db->where('a.id_user = b.id_user');
+            $this->db->where('b.id_departemen = c.id_departemen');
+            $this->db->where('b.id_operator = '.$id.'');
+            return $this->db->get();
+        }
     }
 
     public function getUserData($email){
@@ -42,4 +53,15 @@ class Admin_model extends CI_Model {
         $this->db->where('id_operator', $id_operator);
         return $this->db->delete('operator');
     }
+
+    public function getDepartmentData($id_department=null){
+        if ($id_department == null){
+            $this->db->group_by('fakultas');
+            return $this->db->get('departemen');
+        }
+        else {
+            return $this->db->get_where('departemen', ['id_departemen' => $id_department]);
+        }
+    }
+    
 }

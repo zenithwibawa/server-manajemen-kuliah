@@ -53,11 +53,31 @@ class Auth extends RestController {
         }
     }
 
-    // public function test_post(){
-    //     $data = [
-    //         'password' => password_hash('mhs', PASSWORD_DEFAULT)
-    //     ];
-    //     $this->db->update('user', $data, array('id_user' => 3));
-    // }
+    public function checkemail_get(){
+        $email = $this->get('email');
+
+        if ($email == null){
+            $this->response( [
+                'status' => false,
+                'message' => 'email is required'
+            ], 400);
+        }
+        else {
+            $email = $this->Auth_model->checkEmailIsUnique($email)->row_array();
+            if ($email){
+                $this->response( [
+                    'status' => false,
+                    'message' => 'email already used'
+                ], 400);
+            }
+            else {
+                $this->response( [
+                    'status' => true,
+                    'message' => 'email is unique'
+                ], 200);
+            }
+        }
+
+    }
 
 }
