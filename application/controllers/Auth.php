@@ -55,6 +55,7 @@ class Auth extends RestController {
 
     public function checkemail_get(){
         $email = $this->get('email');
+        $id_user = $this->get('id_user');
 
         if ($email == null){
             $this->response( [
@@ -63,21 +64,46 @@ class Auth extends RestController {
             ], 400);
         }
         else {
-            $email = $this->Auth_model->checkEmailIsUnique($email)->row_array();
-            if ($email){
-                $this->response( [
-                    'status' => false,
-                    'message' => 'email already used'
-                ], 400);
+            if ($id_user == null){ // for insert data
+                $userdata = $this->Auth_model->checkEmail($email, $id_user=null)->row_array();
+                if ($userdata){
+                    $this->response( [
+                        'status' => false,
+                        'message' => 'email already used'
+                    ], 400);
+                }
+                else {
+                    $this->response( [
+                        'status' => true,
+                        'message' => 'email is unique'
+                    ], 200);
+                }
             }
-            else {
-                $this->response( [
-                    'status' => true,
-                    'message' => 'email is unique'
-                ], 200);
+            else { // for update data
+                $userdata = $this->Auth_model->checkEmail($email, $id_user)->row_array();
+                if ($userdata['email'] == $email){
+                    $this->response( [
+                        'status' => true,
+                        'message' => 'update same email with the current email'
+                    ], 200);
+                }
+                else {
+                    $userdata = $this->Auth_model->checkEmail($email, $id_user=null)->row_array();
+                    if ($userdata){
+                        $this->response( [
+                            'status' => false,
+                            'message' => 'email already used'
+                        ], 400);
+                    }
+                    else {
+                        $this->response( [
+                            'status' => true,
+                            'message' => 'email is unique'
+                        ], 200);
+                    }
+                }
             }
         }
-
     }
 
 }

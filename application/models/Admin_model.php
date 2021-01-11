@@ -11,6 +11,7 @@ class Admin_model extends CI_Model {
             $this->db->from('user a, operator b, departemen c');
             $this->db->where('a.id_user = b.id_user');
             $this->db->where('b.id_departemen = c.id_departemen');
+            $this->db->group_by('id_operator');
             return $this->db->get();
         }
         else {

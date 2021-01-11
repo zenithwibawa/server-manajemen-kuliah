@@ -113,7 +113,6 @@ class Admin extends RestController {
     }
 
     public function operatordata_put(){
-        $id_user = $this->put('id_user');
         $id_operator = $this->put('id_operator');
 
         $email = $this->put('email');
@@ -123,18 +122,19 @@ class Admin extends RestController {
         $tgl = $this->put('tgl_lahir');
         $id_department = $this->put('id_department');
 
-        if ($id_user == null || $id_operator == null || $email == null || $password == null || $nama == null || $jk == null || $tgl == null || $id_department == null){
+        if ($id_operator == null || $email == null || $password == null || $nama == null || $jk == null || $tgl == null || $id_department == null){
             $this->response( [
                 'status' => false,
-                'message' => 'id_user, id_operator, nama, email, jenis_kelamin, tgl_lahir, id_department, password are required'
+                'message' => 'id_operator, nama, email, jenis_kelamin, tgl_lahir, id_department, password are required'
             ], 400);
         }
         else {
+            $id_user = $this->Admin_model->getOperatorData($id_operator)->row_array();
             $datauser = [
                 'email' => $email,
                 'password' => password_hash($password, PASSWORD_DEFAULT),
             ];
-            $this->Admin_model->updateUserData($id_user, $datauser);
+            $this->Admin_model->updateUserData($id_user['id_user'], $datauser);
             $dataoperator = [
                 'nama' => $nama,
                 'jenis_kelamin' => $jk,
@@ -158,17 +158,17 @@ class Admin extends RestController {
     }
 
     public function operatordata_delete(){
-        $id_user = $this->delete('id_user');
         $id_operator = $this->delete('id_operator');
 
-        if ($id_user == null || $id_operator == null){
+        if ($id_operator == null){
             $this->response( [
                 'status' => false,
-                'message' => 'id_user, id_operator are required'
+                'message' => 'id_operator is required'
             ], 400);
         }
         else {
-            $user = $this->Admin_model->deleteUserData($id_user);
+            $id_user = $this->Admin_model->getOperatorData($id_operator)->row_array();
+            $user = $this->Admin_model->deleteUserData($id_user['id_user']);
             $operator = $this->Admin_model->deleteOperatorData($id_operator);
             if ($user && $operator){
                 $this->response( [
